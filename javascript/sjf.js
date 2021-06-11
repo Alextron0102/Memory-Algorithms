@@ -24,10 +24,13 @@ function sjf(cantidad, llegada, duracion ){
     var tiempo = 0;
     do{
       //Analizar el proceso que sigue, cambiando el iterador:
-      
-      var menor = pendientes[iterador].duracion;
+      var menor;
       for (let i = 0; i < pendientes.length; i++) {
-        console.log(pendientes.length);
+        if(pendientes[i].llegada <= tiempo){
+          menor = pendientes[i].duracion;
+        }
+      }
+      for (let i = 0; i < pendientes.length; i++) {
         if(pendientes[i].llegada <= tiempo){
           if(pendientes[i].duracion < menor){
             menor = pendientes[i].duracion;
@@ -35,14 +38,15 @@ function sjf(cantidad, llegada, duracion ){
           }
         }
       }
-      
-      console.log(pendientes);
       if(pendientes[iterador].llegada <= tiempo){
           for (let j = 0; j < pendientes[iterador].duracion; j++) {
               cola.push("P"+String(pendientes[iterador].numero));
           }
           tiempo+=pendientes[iterador].duracion;
           pendientes.splice(iterador,1);
+          if(iterador >= pendientes.length){
+            iterador = 0;
+          }
       }
       else{
           cola.push("");
