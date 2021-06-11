@@ -1,10 +1,8 @@
 function sjf(cantidad, llegada, duracion ){
     var procesos= [];
-    var tiempototal = 0;
     for (let i = 0; i < cantidad; i++) {
       var proceso = {'llegada':llegada[i],'duracion':duracion[i],'numero':i};
       procesos.push(proceso);
-      tiempototal+=duracion[i];
     }
     //ordenamiento de los procesos con respecto a su llegada:
     for (let i = 0; i < cantidad-1; i++) {
@@ -16,44 +14,41 @@ function sjf(cantidad, llegada, duracion ){
         }
       }
     }
-    console.log(procesos);
-    var quantum = 3;
-
     var iterador = 0;
     var cola = [];
     var pendientes = [];
     for (let i = 0; i < procesos.length; i++) {
-      var proceso = {'llegada':procesos[i].llegada,'duracion':procesos[i].duracion,'numero':procesos[i].numero, 'duracionaux':procesos[i].duracion};
+      var proceso = {'llegada':procesos[i].llegada,'duracion':procesos[i].duracion,'numero':procesos[i].numero};
       pendientes.push(proceso);
     }
     var tiempo = 0;
-    console.log(pendientes);
-    while (pendientes.length!==0){
+    do{
+      //Analizar el proceso que sigue, cambiando el iterador:
+      
+      var menor = pendientes[iterador].duracion;
+      for (let i = 0; i < pendientes.length; i++) {
+        console.log(pendientes.length);
+        if(pendientes[i].llegada <= tiempo){
+          if(pendientes[i].duracion < menor){
+            menor = pendientes[i].duracion;
+            iterador = i;
+          }
+        }
+      }
+      
+      console.log(pendientes);
       if(pendientes[iterador].llegada <= tiempo){
-        var contador = 0;
-          for (let j = 0; j < pendientes[iterador].duracionaux; j++) {
+          for (let j = 0; j < pendientes[iterador].duracion; j++) {
               cola.push("P"+String(pendientes[iterador].numero));
-              contador++;
-              if(contador>=quantum || pendientes[iterador].duracionaux-contador <= 0){
-                  pendientes[iterador].duracionaux-=(contador);
-                  break;
-              }
           }
-          if(pendientes[iterador].duracionaux <=0){
-            pendientes.splice(iterador,1);
-            iterador--;
-          }
-          tiempo+=contador;
-          iterador++;
+          tiempo+=pendientes[iterador].duracion;
+          pendientes.splice(iterador,1);
       }
       else{
           cola.push("");
           tiempo++;
       }
-      if(iterador >= pendientes.length){
-          iterador = 0;
-      }
-    }
+    }while (pendientes.length !== 0)
     console.log(cola);
 
     //Tabla para mostrar los procesos:
